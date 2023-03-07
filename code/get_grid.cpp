@@ -6,6 +6,7 @@ vector<float> & vertexColors )
 {
 	size = 0;
 
+	srand( time(NULL) ) ;
 	for( int i = 0; i < 10; i++ ) {
 		float pt1[4] = {0.0f + (float) i, 0.0f, 0.0f, 1.0f};
 		float pt2[4] = {0.0f + (float) i, 0.0f, 1.0f, 1.0f};
@@ -45,30 +46,33 @@ vector<float> & vertexColors )
 			vertexPositions.push_back( pt4[2] );
 			vertexPositions.push_back( pt4[3] );
 
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
+			double tmp = 0.0;
+			tmp = ( (double) rand() / (RAND_MAX) );	
+
+			vertexColors.push_back( tmp );
+			vertexColors.push_back( 1-tmp );
+			vertexColors.push_back( tmp );
 			vertexColors.push_back( 1.0 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
+			vertexColors.push_back( tmp );
+			vertexColors.push_back( 1-tmp );
+			vertexColors.push_back( tmp );
 			vertexColors.push_back( 1.0 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
+			vertexColors.push_back( tmp );
+			vertexColors.push_back( 1-tmp );
+			vertexColors.push_back( tmp );
 			vertexColors.push_back( 1.0 );
 
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
+			vertexColors.push_back( tmp );
+			vertexColors.push_back( 1-tmp );
+			vertexColors.push_back( tmp );
 			vertexColors.push_back( 1.0 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
+			vertexColors.push_back( tmp );
+			vertexColors.push_back( 1-tmp );
+			vertexColors.push_back( tmp );
 			vertexColors.push_back( 1.0 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
-			vertexColors.push_back( 0.5 );
+			vertexColors.push_back( tmp );
+			vertexColors.push_back( 1-tmp );
+			vertexColors.push_back( tmp );
 			vertexColors.push_back( 1.0 );
 
 			size += 12*2;
