@@ -28,6 +28,7 @@
 #include "Utils.h"
 #include "process_stl.cpp"
 #include "adjust_angle.cpp"
+#include "get_grid.cpp"
 
 #define numVAOs 1
 #define numVBOs 2
@@ -151,8 +152,12 @@ void setupVertices( int option )
 
 	// IMPORTANT: Reading vertices from the file.
   	num_pts = 0;
-	process_stl( num_pts, vertexPositions_vec, vertexColors_vec, option, getFileName( option ) );	
+//	process_stl( num_pts, vertexPositions_vec, vertexColors_vec, option, getFileName( option ) );	
 	
+	get_grid_pts( num_pts, vertexPositions_vec, vertexColors_vec );
+	cout << num_pts << endl;	
+
+
 	// Converting float vectors into static float arrays. NOTE: Using
 	// non-static ints to specify array size WILL NOT work in older C++
 	// compilers.
@@ -208,89 +213,75 @@ void display(GLFWwindow* window, double currentTime)
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glUseProgram(renderingProgram);
 
-  	for( int i = 1; i < 5; i++ ) {
+	// Setting up vertices.
+	setupVertices(0);
+		
+	// These are getting the memory locations of the modelview and projection
+	// matrices from the renderer.
+	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
+	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	lookAtLoc = glGetUniformLocation(renderingProgram, "lookAt_matrix");
 
-		// Setting vertices into the VBO/VAO. NOTE: Beware of floating-point
-		// arithmetic when computing angles/factors.
-		if( i == 4 && main_ns::rot_factor < 1e-5 ) {
-			setupVertices(0);
-		}
-		else {
-			setupVertices(i);
-		}
+	// Now we set the perspective based on the window size and the aspect ratio.
+	// The glm::perspective function rerturn the projection matrix.
+	glfwGetFramebufferSize(window, &width, &height);
+	aspect = (float)width / (float)height;
+	pMat = glm::perspective(main_ns::fov, aspect, 0.1f, 1000.0f);
 
-		// These are getting the memory locations of the modelview and projection
-		// matrices from the renderer.
-		mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
-		projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
-		lookAtLoc = glGetUniformLocation(renderingProgram, "lookAt_matrix");
+	// Now we are going to move the camera and cube to set up the modelview matrix.
+	//  -- NOTE -- now using lookAt to specify camera position, so set the vmat to
+	//  the identity matrix using glm:translate
+	//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
+	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
-		// Now we set the perspective based on the window size and the aspect ratio.
-		// The glm::perspective function rerturn the projection matrix.
-		glfwGetFramebufferSize(window, &width, &height);
-		aspect = (float)width / (float)height;
-		pMat = glm::perspective(main_ns::fov, aspect, 0.1f, 1000.0f);
+	// Now let's also leave the cube at the center of the scene
+	//mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));
+	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,0.0f));
 
-		// Now we are going to move the camera and cube to set up the modelview matrix.
-		//  -- NOTE -- now using lookAt to specify camera position, so set the vmat to
-		//  the identity matrix using glm:translate
-		//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
-		vMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	
 
-		// Now let's also leave the cube at the center of the scene
-		//mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));
-		mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,0.0f));
+	// OpenGL undestands that the following line is actually MATRIX MULTIPLICATION and 
+	// produces the modelview matrix from vMat and mMat.
+	mvMat = vMat * mMat;
 
-		// Incorporating rotation into the model matrix.
-		if( i == 4 ) {
-			mMat *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,9.5f,0.0f));
-			mMat *= glm::rotate( glm::mat4(1.0f), (float) main_ns::rot_angle, glm::vec3(1.0f,0.0f,0.0f) );		
-			adjust_angle( main_ns::rot_angle, main_ns::rot_factor, main_ns::rot_dir, main_ns::rot_flag );
-			mMat *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,-9.5f,0.0f));
-		}
+	// Specifying lookat matrix with the angle adjustements.
+	lookAtMat = glm::lookAt( glm::vec3( 15 * cos(main_ns::theta) * sin(main_ns::alpha),
+					    15 * sin(main_ns::theta),
+					    15 * cos(main_ns::theta) * cos(main_ns::alpha) ),
+	                         glm::vec3( sin(main_ns::alpha) - 3.14f/2.0f, 
+				    	    0.0f, 
+				            cos(main_ns::theta) - 3.14f/2.0f ) ,
+					    glm::vec3(0.0f, 1.0f, 0.0f)  );
 
-		// OpenGL undestands that the following line is actually MATRIX MULTIPLICATION and 
-		// produces the modelview matrix from vMat and mMat.
-		mvMat = vMat * mMat;
+	// Now place the modelview and projection matrices in the memory locations
+	// we recovered earlier from the renderer.
+	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+	glUniformMatrix4fv(lookAtLoc, 1, GL_FALSE, glm::value_ptr(lookAtMat));
 
-		// Specifying lookat matrix with the angle adjustements.
-		lookAtMat = glm::lookAt( glm::vec3( 15 * cos(main_ns::theta) * sin(main_ns::alpha),
-						    15 * sin(main_ns::theta),
-						    15 * cos(main_ns::theta) * cos(main_ns::alpha) ),
-		                         glm::vec3( sin(main_ns::alpha) - 3.14f/2.0f, 
-						    0.0f, 
-						    cos(main_ns::theta) - 3.14f/2.0f ) ,
-					 glm::vec3(0.0f, 1.0f, 0.0f)  );
+	// Now we are going to bind the vertex attribute array buffer and then 
+	// tell GL what type of data is in the vbo.  They are
+	// floating point vertices arranged as 4 component vectors.
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
+	// And now we tell GL that this is the array we want to draw with glDrawArrays
+	glEnableVertexAttribArray(0);
 
-		// Now place the modelview and projection matrices in the memory locations
-		// we recovered earlier from the renderer.
-		glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
-		glUniformMatrix4fv(lookAtLoc, 1, GL_FALSE, glm::value_ptr(lookAtMat));
+	// And now the colors
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+	// And now we tell GL that this is the array we want to draw with glDrawArrays
+	glEnableVertexAttribArray(1);
 
-		// Now we are going to bind the vertex attribute array buffer and then 
-  		// tell GL what type of data is in the vbo.  They are
-  		// floating point vertices arranged as 4 component vectors.
-  		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-  		glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
-  		// And now we tell GL that this is the array we want to draw with glDrawArrays
- 	 	glEnableVertexAttribArray(0);
+	// Turn on the Z-Buffer depth test.
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 
-  		// And now the colors
-  		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-  		glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
-  		// And now we tell GL that this is the array we want to draw with glDrawArrays
-  		glEnableVertexAttribArray(1);
-
-      		// Turn on the Z-Buffer depth test.
-  		glEnable(GL_DEPTH_TEST);
-  		glDepthFunc(GL_LEQUAL);
-  
-  		// Drawing the vertices.
- 	 	int final_size = (int) ( num_pts / 4  );	
-  		glDrawArrays(GL_TRIANGLES, 0, final_size );
-	}
+	// Drawing the vertices.
+	int final_size = (int) ( num_pts / 4 );	
+	glDrawArrays(GL_TRIANGLES, 0, final_size );
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
