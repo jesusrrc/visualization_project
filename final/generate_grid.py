@@ -28,14 +28,29 @@ def random_grid( grid ):
 #
 # Pos:  Returns a random grid created with the recursive division algorithm.
 #
-# Note: This implementation is an adaption of Jamis Buck's Mazes book 
+# Note: This implementation is a VERY NAIVE adaptation of Jamis Buck's Mazes book 
 #       ( weblog.jamisbuck.ong/2011/1/12/maze-generation-recursive-division
-#       -algorithm.html )
+#       -algorithm.html ).
 #
 ###############################################################################
 
-def divide( grid, x, y, w, h, orientation )
-    if( w < 2 or h < 2 )
+def divide( grid, division_count, orientation ):
+ 
+    wall_place = random.randint(0,10-1)
+
+    if( orientation == 1 ):
+        for i in range(10):
+            grid[wall_place][i] = 0
+        gap = random.randint(0,10-1)
+        grid[wall_place][gap] = 1
+    else:
+        for i in range(10):
+            grid[i][wall_place] = 0
+        gap = random.randint(0,10-1)
+        grid[wall_place][gap] = 1
+
+
+    if( w < 2 or h < 2 ):
         return
 
     # Initializations.
