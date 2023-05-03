@@ -27,18 +27,13 @@ python3 display_perlin.py
 
 ## 2D Grid Work (Milestones)
 
-[x] Display/store grid.
-
-[x] Generate random naive grid.
-
-[x] Generate random grid with a proper algorithm.
-
-[x] Implement algorithm to solve maze.
+- [x] Display/store grid.
+- [x] Generate random naive grid.
+- [x] Generate random grid with a proper algorithm.
+- [x] Implement algorithm to solve maze.
 
 ## 3D Terrain Generation Work (Milestones.
 
-[x] Generate Perlin noise.
-
-[x] Visualize Perlin noise in 2D.
-
-[x] Visualize Perlin noise as 3D terrain.
+- [x] Generate Perlin noise.
+- [x] Visualize Perlin noise in 2D.
+- [x] Visualize Perlin noise as 3D terrain.
