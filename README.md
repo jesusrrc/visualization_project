@@ -12,18 +12,15 @@ with Python 3.
 
 To compile the 2D portion of the project, please use the following:
 
-"""
-cd final/2D
-python3 driver.py
-"""
+	cd final/2D
+	python3 driver.py
+
 
 To compile the 3D portion of the project, please use the following:
 
-"""
-cd final/3D
-python3 perlin.py > output
-python3 display_perlin.py
-"""
+	cd final/3D
+	python3 perlin.py > output
+	python3 display_perlin.py
 
 ## 2D Grid Work (Milestones)
 
