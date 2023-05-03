@@ -1,7 +1,18 @@
-import os           # A
-import sys          # A
-import pygame as pg # PyGame for 2D graphics programming.
-import random       # Random number generation.
+###############################################################################
+# 
+# Author:      Jesus R. Rijo Candelario (Mercer University)
+# Date:        05/02/2023
+# Course:      CSC 415: Graphics visualization and simulation.
+# Instructor:  Dr. A. Pounds.
+#
+# Description: Python script to generate a 10x10 puzzle.
+#
+###############################################################################
+
+import os            # Module to interface with the OS.
+import sys           # Module for system-specific paramenters
+import pygame as pg  # PyGame for 2D graphics programming.
+import random        # Pseudo-random number generation.
 
 ###############################################################################
 #

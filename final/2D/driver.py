@@ -5,8 +5,8 @@
 # Course:      CSC 415: Graphics visualization and simulation.
 # Instructor:  Dr. A. Pounds.
 #
-# Description: Pygame script to generate a 10x10 puzzle. Note that not all 
-#              valid nodes are necessarily reachable.
+# Description: Pygame script to generate and display  a 10x10 puzzle. Note that 
+#              not all valid nodes are necessarily reachable.
 #
 ###############################################################################
 
@@ -15,12 +15,13 @@ import sys           # Module for system-specific paramenters
 import pygame as pg  # PyGame for 2D graphics programming.
 import random        # Pseudo-random number generation.
 import generate_grid # Helper function to build grid.
+import bfs           # Breadth-first search.
 
 ###############################################################################
 #
 # Function #1:
 #
-# Pre: The screen and grid objects should be initializes.
+# Pre: The screen and grid objects should be initialized.
 #
 # Pos: Draws 100*100 squares on the screen to form a grid.
 #
@@ -41,6 +42,16 @@ def draw_grid( SCREEN, grid, W, H ):
             # Drawing the square.
             pg.draw.rect( SCREEN, local_color, 
                           pg.Rect( W * i / 10.0, H * j / 10.0, W / 10.5, H / 10.5 ) )
+
+###############################################################################
+#
+# Function #2:
+#
+# Pre: The screen object should be initialized.
+#
+# Pos: Draws a small blue screen denoting a chosen node.
+#
+###############################################################################
 
 def draw_icon( SCREEN, W, H, x, y ):
     local_color = (75, 100, 200)
