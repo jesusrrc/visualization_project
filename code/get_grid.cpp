@@ -1,3 +1,5 @@
+#define DIM 100
+
 #include <iostream>
 using namespace std;
 
@@ -7,13 +9,13 @@ vector<float> & vertexColors )
 	size = 0;
 
 	srand( time(NULL) ) ;
-	for( int i = 0; i < 10; i++ ) {
+	for( int i = 0; i < DIM; i++ ) {
 		float pt1[4] = {0.0f + (float) i, 0.0f, 0.0f, 1.0f};
 		float pt2[4] = {0.0f + (float) i, 0.0f, 1.0f, 1.0f};
 		float pt3[4] = {1.0f + (float) i, 0.0f, 0.0f, 1.0f};
 		float pt4[4] = {1.0f + (float) i, 0.0f, 1.0f, 1.0f};
 
-		for( int j = 0; j < 10; j++ ) {
+		for( int j = 0; j < DIM; j++ ) {
 
 			pt1[2] += 1.0f;
 			pt2[2] += 1.0f;

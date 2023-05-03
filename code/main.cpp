@@ -380,7 +380,7 @@ int main(void)
 	// Building window.
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	GLFWwindow* window = glfwCreateWindow(600, 600, "CSC 415 -- Window Conversion Project", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(600, 600, "CSC 415 -- Visualization/Simulation Project", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
     	glewExperimental = GL_TRUE;

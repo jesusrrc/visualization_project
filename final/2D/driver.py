@@ -79,6 +79,7 @@ pg.display.set_caption("CSC 415 -- Visualization Project (A Simple Puzzle Solver
 
 # Initializing grid.
 grid = [[1 for x in range(10)] for y in range(10)]
+visited = [[0 for x in range(10)] for y in range(10)]
 
 # Retrieving grid from auxiliary script.
 division_count = 0
@@ -103,8 +104,14 @@ while( 1 ):
         break
 
 print('Printing values for two cells to check')
-print( x1, y1 )
-print( x2, y2 )
+print( '\t', x1, y1 )
+print( '\t', x2, y2 )
+
+# Printing neighboring nodes with BFS.
+sol = bfs.bfs( grid, visited, x1, y1 )
+
+if( [x2,y2] in sol ):
+    print("=> NODES ARE CONNECTED")
 
 # Specifying display calls:
 while( 1 ):

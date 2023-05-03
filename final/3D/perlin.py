@@ -34,9 +34,6 @@ for i in range(100):
     for j in range(100):
         print( i, j, height_offset * pic[i][j] ) 
 
-
-
-
 # Mathplotlib calls to display the region as a grayscale.
 # In this project, we will interpret the colors as different
 # heights, on the normalized range [-1/2,1/2].

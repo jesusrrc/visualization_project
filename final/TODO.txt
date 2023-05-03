@@ -1,8 +1,8 @@
 - 2D Grid work
 	+ Display/store grid [x]
 	+ Generate random naive grid [x]
-	+ Generate random grid with a proper algorithm [ ]
-	+ Implement algorithm to solve maze [ ]
+	+ Generate random grid with a proper algorithm [x]
+	+ Implement algorithm to solve maze [x]
 
 - 3D Terrain Generation work
 	+ Generate Perlin noise [x]
